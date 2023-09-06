@@ -46,11 +46,10 @@ User.init(
     }      ,
             {
                 hooks: {
-                    beforeCreate(userData) {
-                        return bcrypt.hash(userData.password, 10).then(newUserData => {
-                            return newUserData
-                        });
-                    }
+
+                async beforeCreate(newUserData) {
+                      newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                    return newUserData;                    }
                 },       
         // TABLE CONFIGURATION OPTIONS GO HERE 
         sequelize,

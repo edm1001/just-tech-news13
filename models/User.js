@@ -1,5 +1,6 @@
 const {Model, DataTypes} = require('sequelize');
 const sequelize = require('../config/connection');
+const bcrypt = require('bcrypt');
 
 // inits the User table into Model
 class User extends Model {}
@@ -41,9 +42,16 @@ User.init(
                 // pass length must exceed 7
                 len:[7]
             }
-        }
-    },
-    {
+        },
+    }      ,
+            {
+                hooks: {
+                    beforeCreate(userData) {
+                        return bcrypt.hash(userData.password, 10).then(newUserData => {
+                            return newUserData
+                        });
+                    }
+                },       
         // TABLE CONFIGURATION OPTIONS GO HERE 
         sequelize,
         timestamps: false,
